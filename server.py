@@ -6,7 +6,7 @@ import uuid
 import os
 
 app = Flask(__name__)
-CORS(app)  # ✅ Allow cross-origin requests (Netlify > Render)
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 VOICE = "en-US-JennyNeural"
 
@@ -14,8 +14,16 @@ VOICE = "en-US-JennyNeural"
 def home():
     return "VitalAssist Python Voice Server is live."
 
-@app.route("/api/voice", methods=["POST"])
+@app.route("/api/voice", methods=["POST", "OPTIONS"])
 def voice():
+    if request.method == "OPTIONS":
+        # CORS preflight
+        response = app.make_default_options_response()
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        return response
+
     text = request.json.get("text", "")
     if not text:
         return jsonify({"error": "No text provided"}), 400
