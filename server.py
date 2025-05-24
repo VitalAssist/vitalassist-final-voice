@@ -1,10 +1,13 @@
 from flask import Flask, request, send_file, jsonify
+from flask_cors import CORS
 import edge_tts
 import asyncio
 import uuid
 import os
 
 app = Flask(__name__)
+CORS(app)  # ✅ Allow cross-origin requests (Netlify > Render)
+
 VOICE = "en-US-JennyNeural"
 
 @app.route("/")
