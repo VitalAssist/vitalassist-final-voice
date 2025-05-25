@@ -33,7 +33,9 @@ def transcribe_audio():
         return jsonify({"text": transcript["text"]})
 
     except Exception as e:
+        print("🔥 Whisper API error:", str(e))  # 🧠 Log it in Render console
         return jsonify({"error": str(e)}), 500
+
 
 
 @app.route("/speak", methods=["POST"])
