@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import tempfile
 import os
-import openai
 import edge_tts
 import asyncio
 
