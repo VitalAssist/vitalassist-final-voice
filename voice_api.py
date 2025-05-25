@@ -17,7 +17,7 @@ print("🚀 VitalAssist Flask API started and ready.")
 @app.route("/transcribe", methods=["POST"])
 def transcribe_audio():
     try:
-        print("🎤 /transcribe endpoint called")
+        print("🚀 /transcribe endpoint HIT")
 
         if "audio" not in request.files:
             print("❌ No audio received in request.files")
@@ -29,21 +29,20 @@ def transcribe_audio():
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp:
             audio_path = temp.name
             audio_file.save(audio_path)
+        print("📤 Saved to:", audio_path)
 
-        print("📤 Audio saved to:", audio_path)
-
-        # Whisper
+        # Whisper Transcription
         with open(audio_path, "rb") as af:
-            print("🔁 Sending to OpenAI Whisper...")
+            print("🔁 Sending to OpenAI Whisper API...")
             transcript = openai.Audio.transcribe("whisper-1", af)
 
         os.remove(audio_path)
-        print("✅ Whisper result:", transcript["text"])
+        print("✅ Whisper Response:", transcript)
 
         return jsonify({"text": transcript["text"]})
 
     except Exception as e:
-        print("🔥 Whisper ERROR:", str(e))
+        print("🔥 WHISPER ERROR:", str(e))  # ← This will now log the real error
         return jsonify({"error": str(e)}), 500
 
 # ✅ Edge TTS (Speak)
