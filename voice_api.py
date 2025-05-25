@@ -86,9 +86,12 @@ def synthesize():
 @app.route("/")
 def home():
     return "✅ VitalAssist Voice Server is Online."
-    if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # ✅ Required by Render
+
+# ✅ Required by Render to bind to port
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
