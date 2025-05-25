@@ -5,8 +5,13 @@ import os
 import edge_tts
 import asyncio
 import openai
+from flask_cors import CORS
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS  # 🆕
+import tempfile, os, asyncio, edge_tts, openai
 
 app = Flask(__name__)
+CORS(app)  # ✅ Allow all cross-origin calls
 
 openai.api_key = os.getenv("OPENAI_API_KEY")  # Set this in Render > Environment
 
