@@ -5,6 +5,7 @@ import tempfile
 import os
 import edge_tts
 import asyncio
+import whisper  # ✅ Make sure this is at the top
 
 # ✅ Init
 app = Flask(__name__)
