@@ -26,15 +26,19 @@ def transcribe_audio():
             audio_path = temp.name
             audio_file.save(audio_path)
 
+        print("📤 Audio saved to:", audio_path)
+
         with open(audio_path, "rb") as af:
             transcript = openai.Audio.transcribe("whisper-1", af)
 
         os.remove(audio_path)
+        print("🧠 Transcription Result:", transcript)
         return jsonify({"text": transcript["text"]})
 
     except Exception as e:
-        print("🔥 Whisper API error:", str(e))  # 🧠 Log it in Render console
+        print("🔥 Whisper API error:", str(e))  # ✅ Print to Render logs
         return jsonify({"error": str(e)}), 500
+
 
 
 
