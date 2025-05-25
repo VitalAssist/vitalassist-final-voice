@@ -1,13 +1,14 @@
-# voice_api.py - VitalAssist Cloud Voice Server (Whisper + Edge TTS)
+# voice_api.py - Render-Optimized: Edge TTS + OpenAI Whisper
 from flask import Flask, request, jsonify, send_file
-import whisper
 import tempfile
 import os
 import edge_tts
 import asyncio
+import openai
 
 app = Flask(__name__)
-model = whisper.load_model("base")  # Fast for web
+
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Set this in Render > Environment
 
 @app.route("/transcribe", methods=["POST"])
 def transcribe_audio():
@@ -19,9 +20,12 @@ def transcribe_audio():
         audio_path = temp.name
         audio_file.save(audio_path)
 
-    result = model.transcribe(audio_path)
+    # Send to OpenAI Whisper
+    with open(audio_path, "rb") as af:
+        transcript = openai.Audio.transcribe("whisper-1", af)
+
     os.remove(audio_path)
-    return jsonify({"text": result["text"]})
+    return jsonify({"text": transcript["text"]})
 
 @app.route("/speak", methods=["POST"])
 def synthesize():
@@ -36,11 +40,10 @@ def synthesize():
         "ku": "en-US-JennyNeural",
     }
     voice = voice_map.get(lang, "en-US-JennyNeural")
-
     output_path = os.path.join(tempfile.gettempdir(), "output.mp3")
 
     async def generate():
-        communicate = edge_tts.Communicate(text, voice)
+        communicate = edge_tts.Communicate(text=text, voice=voice)
         await communicate.save(output_path)
 
     asyncio.run(generate())
