@@ -1,16 +1,15 @@
 # voice_api.py - Final Voice API with Debugging (Whisper + Edge TTS)
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-import tempfile
-import os
+import whisper
 import edge_tts
 import asyncio
-import whisper  # ✅ Make sure this is at the top
-
-# ✅ Init
+import tempfile
+import os
 
 app = Flask(__name__)
-CORS(app)  # ✅ This allows Netlify to talk to Flask
+CORS(app, resources={r"/*": {"origins": "*"}})  # ✅ Applies CORS globally
+
 
 print("🚀 VitalAssist Flask API started and ready.")
 
