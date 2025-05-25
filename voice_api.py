@@ -13,36 +13,36 @@ CORS(app)
 print("🚀 VitalAssist Flask API started and ready.")
 
 # ✅ Whisper (Transcribe)
+import whisper  # ✅ Make sure this is at the top
+
 @app.route("/transcribe", methods=["POST"])
 def transcribe_audio():
     try:
         print("🚀 /transcribe endpoint HIT")
 
         if "audio" not in request.files:
-            print("❌ No audio received in request.files")
+            print("❌ No audio in request")
             return jsonify({"error": "No audio file provided"}), 400
 
         audio_file = request.files["audio"]
-        print("📥 Received:", audio_file.filename, "| Type:", audio_file.content_type)
+        print("📥 Received file:", audio_file.filename)
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp:
             audio_path = temp.name
             audio_file.save(audio_path)
-        print("📤 Saved to:", audio_path)
 
-        # Whisper Transcription
-        with open(audio_path, "rb") as af:
-            print("🔁 Sending to OpenAI Whisper API...")
-            transcript = openai.Audio.transcribe("whisper-1", af)
+        print("🔁 Running Whisper locally...")
+        model = whisper.load_model("base")  # You can use "tiny" if base is slow
+        result = model.transcribe(audio_path)
 
         os.remove(audio_path)
-        print("✅ Whisper Response:", transcript)
-
-        return jsonify({"text": transcript["text"]})
+        print("✅ Transcribed:", result["text"])
+        return jsonify({"text": result["text"]})
 
     except Exception as e:
-        print("🔥 WHISPER ERROR:", str(e))  # ← This will now log the real error
+        print("🔥 Whisper ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
+
 
 # ✅ Edge TTS (Speak)
 @app.route("/speak", methods=["POST"])
