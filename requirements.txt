@@ -1,7 +1,6 @@
-flask-cors
-Flask
-edge-tts
-whisper
-torch
+flask==2.2.5
+edge-tts==6.1.4
+openai-whisper==20230314
+torch==2.0.1
 setuptools
 numpy
