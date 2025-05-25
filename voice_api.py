@@ -52,26 +52,36 @@ def transcribe_audio():
 
 @app.route("/speak", methods=["POST"])
 def synthesize():
-    data = request.json
-    text = data.get("text", "")
-    lang = data.get("lang", "en")
-    voice_map = {
-        "en": "en-US-JennyNeural",
-        "ar": "ar-EG-SalmaNeural",
-        "fa": "fa-IR-DilaraNeural",
-        "hi": "hi-IN-SwaraNeural",
-        "ku": "en-US-JennyNeural",
-    }
-    voice = voice_map.get(lang, "en-US-JennyNeural")
-    output_path = os.path.join(tempfile.gettempdir(), "output.mp3")
+    try:
+        data = request.json
+        text = data.get("text", "").strip()
+        lang = data.get("lang", "en")
 
-    async def generate():
-        communicate = edge_tts.Communicate(text=text, voice=voice)
-        await communicate.save(output_path)
+        if not text:
+            raise ValueError("No text provided for TTS.")
 
-    asyncio.run(generate())
+        voice_map = {
+            "en": "en-US-JennyNeural",
+            "ar": "ar-EG-SalmaNeural",
+            "fa": "fa-IR-DilaraNeural",
+            "hi": "hi-IN-SwaraNeural",
+            "ku": "en-US-JennyNeural",
+        }
+        voice = voice_map.get(lang, "en-US-JennyNeural")
 
-    return send_file(output_path, mimetype="audio/mpeg")
+        output_path = os.path.join(tempfile.gettempdir(), "output.mp3")
+
+        async def generate():
+            communicate = edge_tts.Communicate(text=text, voice=voice)
+            await communicate.save(output_path)
+
+        asyncio.run(generate())
+        return send_file(output_path, mimetype="audio/mpeg")
+
+    except Exception as e:
+        print("🔥 TTS ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
