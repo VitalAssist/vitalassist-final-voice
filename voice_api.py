@@ -18,26 +18,25 @@ openai.api_key = os.getenv("OPENAI_API_KEY")  # Set this in Render > Environment
 @app.route("/transcribe", methods=["POST"])
 def transcribe_audio():
     try:
-        print("🚀 /transcribe endpoint hit")
+        print("🚀 /transcribe HIT")
 
         if "audio" not in request.files:
-            print("🚫 No audio provided.")
+            print("❌ No 'audio' field in request.files")
             return jsonify({"error": "No audio file provided"}), 400
 
         audio_file = request.files["audio"]
-        print("📥 Audio file received:", audio_file.filename)
+        print("📥 Received file:", audio_file.filename, "| Type:", audio_file.content_type)
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp:
             audio_path = temp.name
             audio_file.save(audio_path)
-
         print("📤 Saved to:", audio_path)
 
         with open(audio_path, "rb") as af:
-            print("🔁 Sending to OpenAI Whisper API...")
+            print("🔁 Sending to Whisper...")
             transcript = openai.Audio.transcribe("whisper-1", af)
 
-        print("✅ Whisper response:", transcript)
+        print("✅ Response from Whisper:", transcript)
         os.remove(audio_path)
         return jsonify({"text": transcript["text"]})
 
