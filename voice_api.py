@@ -12,9 +12,6 @@ import whisper  # ✅ Make sure this is at the top
 app = Flask(__name__)
 CORS(app)  # ✅ This allows Netlify to talk to Flask
 
-app = Flask(__name__)
-CORS(app)
-
 print("🚀 VitalAssist Flask API started and ready.")
 
 # ✅ Whisper (Transcribe)
