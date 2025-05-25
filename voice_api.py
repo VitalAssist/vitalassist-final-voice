@@ -57,7 +57,7 @@ def synthesize():
         text = data.get("text", "").strip()
         lang = data.get("lang", "en")
 
-        print(f"🔊 TTS requested: '{text}' in language: {lang}")
+        print(f"🔊 TTS called: text='{text}', lang='{lang}'")
 
         if not text:
             raise ValueError("No text provided for TTS.")
@@ -78,7 +78,6 @@ def synthesize():
             await communicate.save(output_path)
 
         asyncio.run(generate())
-
         return send_file(output_path, mimetype="audio/mpeg")
 
     except Exception as e:
