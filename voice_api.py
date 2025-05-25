@@ -33,7 +33,8 @@ def transcribe_audio():
             audio_file.save(audio_path)
 
         print("🔁 Running Whisper locally...")
-        model = whisper.load_model("base")  # You can use "tiny" if base is slow
+        model = whisper.load_model("tiny")
+
         result = model.transcribe(audio_path)
 
         os.remove(audio_path)
