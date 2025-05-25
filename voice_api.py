@@ -8,6 +8,10 @@ import asyncio
 import whisper  # ✅ Make sure this is at the top
 
 # ✅ Init
+
+app = Flask(__name__)
+CORS(app)  # ✅ This allows Netlify to talk to Flask
+
 app = Flask(__name__)
 CORS(app)
 
