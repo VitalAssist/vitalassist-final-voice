@@ -29,7 +29,10 @@ def transcribe_audio():
 
         print("🧠 Loading Whisper tiny model...")
         model = whisper.load_model("tiny")  # ✅ lightweight for Render
-        result = model.transcribe(audio_path)
+        print("📂 Running transcription...")
+result = model.transcribe(audio_path)
+print("✅ Whisper returned:", result)
+
 
         os.remove(audio_path)
         print("✅ Transcription:", result["text"])
