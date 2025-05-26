@@ -1,6 +1,7 @@
 flask
 flask-cors
 edge-tts
-openai-whisper
+whisper
 torch
 numpy
+ffmpeg-python
